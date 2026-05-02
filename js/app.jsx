@@ -262,8 +262,9 @@ function PageHeader({ eyebrow, title, em, lead, mobile }) {
         <h1 style={{
           fontFamily: TOK.serif, fontSize: mobile ? 44 : 76, fontWeight: 300,
           letterSpacing: "-0.025em", margin: "0 0 24px", lineHeight: 0.98,
+          color: TOK.accent,
         }}>
-          {title}{title && em ? " " : ""}{em && <em style={{ fontStyle: "italic", color: TOK.accent, fontWeight: 300 }}>{em}</em>}
+          {title}{title && em ? " " : ""}{em}
         </h1>
       )}
       {lead && (
@@ -679,8 +680,8 @@ function Contact({ data, mobile, onNav }) {
     <div style={shell}>
       <Nav active="contact" mobile={mobile} onNav={onNav} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
-        <h1 style={{ fontFamily: TOK.serif, fontSize: mobile ? 56 : 96, fontWeight: 300, letterSpacing: "-0.025em", margin: "0 0 24px", lineHeight: 0.95 }}>
-          Let's <em style={{ fontStyle: "italic", color: TOK.accent }}>talk</em>.
+        <h1 style={{ fontFamily: TOK.serif, fontSize: mobile ? 56 : 96, fontWeight: 300, letterSpacing: "-0.025em", margin: "0 0 24px", lineHeight: 0.95, color: TOK.accent }}>
+          Let's talk.
         </h1>
         <p style={{ fontFamily: TOK.serif, fontSize: mobile ? 19 : 24, fontWeight: 400, color: TOK.inkSoft, maxWidth: 640, lineHeight: 1.45, margin: "0 0 64px" }}>
           For research collaborations, podcast invitations, lectures, media requests, or to share your own work — I read everything.
