@@ -1,0 +1,23 @@
+{
+  "name": "Clara Siagian",
+  "title": "Early Career Researcher",
+  "institution": "Your University or Institution, Country",
+  "photo": "assets/profile.jpg",
+  "bio": "I am a researcher working at the intersection of [your field] and [related area]. My work explores [key questions or themes you investigate]. I am particularly interested in how [a specific angle or approach]. Currently, I am based at [your institution] where I am working on [current project or position].",
+  "interests": [
+    "Research Interest One",
+    "Research Interest Two",
+    "Research Interest Three",
+    "Research Interest Four",
+    "Research Interest Five"
+  ],
+  "links": {
+    "scholar": "",
+    "orcid": "",
+    "researchgate": "",
+    "linkedin": "",
+    "email": "clara@example.com"
+  },
+  "collaborate_intro": "I am open to research collaborations, speaking invitations, and opportunities to engage on topics related to my work. Whether you are a fellow researcher, a practitioner, or simply curious — feel free to reach out. I would love to hear from you.",
+  "formspree_id": "YOUR_FORM_ID"
+}

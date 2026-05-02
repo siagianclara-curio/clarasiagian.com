@@ -27,24 +27,14 @@
 
     <h1 class="page-title">Collaborate with Me</h1>
 
-    <!-- TODO: Customize this intro text to match Clara's tone and openness to contact -->
-    <p class="contact-intro">
+    <p id="collaborate-intro" class="contact-intro">
       I am open to research collaborations, speaking invitations, and opportunities
       to engage on topics related to my work. Whether you are a fellow researcher,
       a practitioner, or simply curious — feel free to reach out. I would love to
       hear from you.
     </p>
 
-    <!--
-      HOW TO ACTIVATE THIS FORM (takes about 2 minutes):
-      1. Go to https://formspree.io and sign up for a free account
-      2. Click "New Form", give it a name (e.g. "Clara website contact")
-      3. Copy the Form ID shown — it looks like: xpwzabcd
-      4. Replace YOUR_FORM_ID below with that ID
-         Example: action="https://formspree.io/f/xpwzabcd"
-      Formspree will forward every submission to the email you signed up with.
-    -->
-    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
 
       <div class="form-group">
         <label for="name">Your Name</label>
@@ -73,5 +63,6 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/render.js"></script>
 </body>
 </html>
