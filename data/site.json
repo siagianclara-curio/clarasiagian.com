@@ -1,23 +1,24 @@
 {
   "name": "Clara Siagian",
-  "title": "Postdoctoral researcher",
-  "institution": "Bartlett Development Planning Unit, University College London",
+  "role": "Postdoctoral Researcher",
+  "affiliation": "Bartlett Development Planning Unit, University College London",
+  "tagline": "People, places, and politics — how young people navigate change, crisis, and the long horizon of Southeast Asia.",
+  "bio": "I examine the intersection of people, place, and politics to understand how young people navigate state interventions in the Asia-Pacific. With a focus on Indonesia, my research spans housing, urban development, and climate governance, grounded in ten years of participatory fieldwork.\n\nI have an exceptional track record of independent leadership, including AU$1.1M in funding and six peer-reviewed articles (5 in Q1; 210+ citations). My work translates complex social dynamics into actionable policy knowledge, currently supported by a prestigious postdoctoral appointment at the Bartlett Development Planning Unit, University College London.\n\nComplementing my academic output, I have consulted for the World Bank and UN agencies, bringing research-based policy insights into global development agenda.",
+  "email": "siagian.clara@gmail.com",
+  "location": "London, UK",
   "photo": "assets/profile.jpg",
-  "bio": "I examine the intersection of people, place, and politics to understand how young people navigate state interventions in the Asia-Pacific. With a focus on Indonesia, my research spans housing, urban development, and climate governance, grounded in ten years of participatory fieldwork. I have an exceptional track record of independent leadership, including AU$1.1M in funding and six peer-reviewed articles (5 in Q1; 210+ citations). My work translates complex social dynamics into actionable policy knowledge, currently supported by a prestigious postdoctoral appointment at Bartlett Development Planning Unit, University College London. Complementing my academic output, I have consulted for the World Bank and UN agencies, bringing research-based policy insights into global development agenda.",
-  "interests": [
-    "Youth studies",
-    "Urban development",
-    "Social policy",
-    "participatory and creative methodology",
-    "Southeast Asia"
+  "methods": "Long-term ethnographic fieldwork; longitudinal qualitative panels; oral history; participatory mapping with young people; and policy-engaged research with civil society and government partners.",
+  "education": [
+    { "degree": "PhD, Anthropology", "institution": "Australian National University", "year": "2022" },
+    { "degree": "MA, Development Studies", "institution": "Universitas Indonesia", "year": "2016" },
+    { "degree": "BA, Sociology", "institution": "Universitas Gadjah Mada", "year": "2012" }
   ],
   "links": {
     "scholar": "",
     "orcid": "https://orcid.org/0000-0002-4413-1446",
     "researchgate": "",
     "linkedin": "https://www.linkedin.com/in/clara-siagian/",
+    "bluesky": "",
     "email": "siagian.clara@gmail.com"
-  },
-  "collaborate_intro": "I am open to research collaboration and opportunities to engage on topics related to my work. Whether you are a fellow researcher, a practitioner, or simply curious — feel free to reach out. I would love to hear from you.",
-  "formspree_id": "YOUR_FORM_ID"
+  }
 }

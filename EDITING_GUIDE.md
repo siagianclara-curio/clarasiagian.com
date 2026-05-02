@@ -6,196 +6,261 @@ This guide covers everything you need to update your website content — no codi
 
 ## Quick overview
 
-Your website content lives in three files in the **`data/`** folder:
+Your website content lives in the **`data/`** folder. Each file controls a different part of the site:
 
-| File | What it controls |
+| File | Controls |
 |---|---|
-| `data/site.json` | Your name, bio, research interests, links, and the contact form intro |
-| `data/projects.csv` | Your research projects list |
-| `data/publications.csv` | Your publications list |
+| `data/site.json` | Name, bio, photo, links, education, methods |
+| `data/currently.csv` | The 3 "Currently" spotlight items on the Home page |
+| `data/research_themes.csv` | Research theme names and descriptions |
+| `data/projects.csv` | Individual research projects (linked to themes) |
+| `data/publications.csv` | Publications list, grouped by theme |
+| `data/engagement.csv` | Podcasts, public writing, invited talks |
+| `data/collaborations.csv` | Institutional collaborations |
+| `data/awards.csv` | Awards and honours |
+| `data/grants.csv` | Research grants and funding |
+| `data/gallery.csv` | Fieldwork photo gallery |
 
 ---
 
-## How to find and edit a file on GitHub
+## How to edit a file on GitHub
 
-1. Go to your repository on GitHub (bookmark it!)
+1. Go to your repository on GitHub
 2. Click on the `data` folder
 3. Click the file you want to edit
-4. Click the **pencil icon** (✏️) in the top right — it says "Edit this file" when you hover
+4. Click the **pencil icon** (✏️) — "Edit this file"
 5. Make your changes
-6. When done, click the green **"Commit changes"** button at the top right
-7. A small window appears — you can type a note about what you changed, or just click the green **"Commit changes"** button again
-8. Wait about 30 seconds, then refresh your website to see the changes
+6. Click the green **"Commit changes"** button
+7. A small window appears — you can leave a note or just click **"Commit changes"** again
+8. Wait about 30 seconds, then refresh your website
 
-> **Important:** If you see a **yellow or red warning bar** at the top of the editor after making changes — stop. Do not click Commit. Close the tab and undo your changes, or ask for help. This warning means there is a formatting error that would break the page.
+> **Tip:** For CSV files, click the **Preview** tab in the GitHub editor to see your data as a table before and after editing.
 
 ---
 
 ## Updating your profile (`data/site.json`)
 
-This file controls your **Profile page** and the intro text on your **Collaborate page**.
+This controls the **Home** and **About** pages.
 
-### What the fields mean
+### Fields explained
 
 ```
-"name"              → Your name as it appears in the page heading
-"title"             → Your role or position (e.g. "PhD Researcher")
-"institution"       → Your university or organisation, and country
-"photo"             → The filename of your profile photo (see below)
-"bio"               → Your About paragraph — a few sentences about your research
+"name"        → Your name as it appears everywhere on the site
+"role"        → Your job title or role
+"affiliation" → Your institution and department
+"tagline"     → A one-line description shown on the Home page (under your name)
+"bio"         → Your bio text, shown on the About page.
+               To create paragraph breaks, type \n\n between paragraphs (two backslash-n).
+               Example: "First paragraph.\n\nSecond paragraph."
+"email"       → Your email address
+"location"    → Your city/country
+"photo"       → Path to your profile photo, e.g. "assets/profile.jpg"
+"methods"     → A sentence or two about your research methods (About page)
 
-"interests"         → Your research interest tags (the pill-shaped labels)
-                      Each item goes on its own line, in "quotes", separated by commas
+"education"   → A list of your degrees. Each entry has:
+                "degree"      → e.g. "PhD, Anthropology"
+                "institution" → e.g. "Australian National University"
+                "year"        → e.g. "2022"
 
-"links"             → Your academic and social links
-  "scholar"         → Your Google Scholar profile URL (paste the full https://... link)
-  "orcid"           → Your ORCID profile URL
-  "researchgate"    → Your ResearchGate profile URL
-  "linkedin"        → Your LinkedIn profile URL
-  "email"           → Your email address (just the address, no mailto:)
-
-"collaborate_intro" → The introductory text on your Collaborate page
-"formspree_id"      → Your Formspree form ID (see the contact form section below)
+"links"       → Your academic profiles. Leave as "" to hide.
+  "scholar"     → Google Scholar profile URL
+  "orcid"       → ORCID profile URL
+  "linkedin"    → LinkedIn profile URL
+  "bluesky"     → Bluesky profile URL
+  "researchgate"→ ResearchGate profile URL
+  "email"       → Your email (also used on the Contact page)
 ```
 
-### Rules to remember
+### Rules
 
-- Always keep the **double quotes** around every value: `"like this"`
-- To hide a link (e.g. if you don't have ResearchGate), leave it as `""` — two quotes with nothing between them
-- For `interests`, each tag goes on its own line. To add a new interest, copy one of the existing lines and paste it. Make sure every line except the last one ends with a comma:
-
-```json
-"interests": [
-  "Environmental Economics",
-  "Land Use Change",
-  "Southeast Asia"
-]
-```
+- Always keep the **double quotes** around values: `"like this"`
+- Leave a link as `""` (two quotes with nothing between) to hide it
+- For `bio`, separate paragraphs with `\n\n` (no space around the backslashes)
 
 ---
 
-## Adding a project (`data/projects.csv`)
+## Home page spotlight (`data/currently.csv`)
 
-**Tip:** Before editing, click the **Preview** tab — GitHub will show your projects as a table so you can see the current data clearly.
-
-### How to add a new project
-
-1. Open `data/projects.csv` and click the pencil icon
-2. Go to the last row of data (the bottom of the file, before any blank lines)
-3. Press Enter to start a new line
-4. Copy this template and fill in your details:
-
-```
-"Your Project Title","2025 – Present","Ongoing","Write your project description here.",""
-```
-
-5. Commit the changes
-
-### The columns explained
+The **"Currently"** section on the Home page shows 3 short items. Each row has:
 
 | Column | What to put |
 |---|---|
-| `title` | The project name |
-| `years` | Date range, e.g. `2024 – Present` or `2022 – 2024` |
-| `status` | Either `Ongoing` or `Completed` |
-| `description` | 2–4 sentences about the project |
-| `url` | A link to a project page, if you have one. Leave as `""` for no link. |
+| `tag` | A short category label (e.g. Writing, Research, Fieldwork) |
+| `title` | A short title for the item |
+| `body` | A sentence or two of detail |
 
-### The one rule: always use double quotes around every field
-
-Every piece of text must be wrapped in double quotes, like this:
-
+**Example:**
 ```
-"Project Title","2024 – Present","Ongoing","Description goes here.",""
+tag,title,body
+Writing,Book in Progress,"Co-editing a volume on Early Childhood Development, forthcoming from Oxford University Press."
+Research,Climate & Youth,"Investigating how young people across Indonesia adapt to environmental change."
+Collaboration,Open for Partnerships,"Available for collaborations on housing, youth, and social policy."
 ```
 
-If your description contains a double quote character (rare), write it as two double quotes: `""`.
-
-### To edit an existing project
-
-Find the row with that project title, click into the cell you want to change, and update the text. Keep the surrounding double quotes.
-
-### To remove a project
-
-Delete the entire row (the whole line).
+Update these whenever you start something new or want to highlight different work.
 
 ---
 
-## Adding a publication (`data/publications.csv`)
+## Research themes (`data/research_themes.csv`)
 
-Same approach as projects. Click **Preview** first to see your current publications as a table.
-
-### How to add a new publication
-
-1. Open `data/publications.csv` and click the pencil icon
-2. Add a new line at the top (publications go newest first)
-3. Copy this template:
-
-```
-"Paper Title","Author One, Author Two","Journal Name",2025,"https://doi.org/..."
-```
-
-4. Commit the changes
-
-### The columns explained
+Themes group your projects on the **Research** page. Each row is one theme:
 
 | Column | What to put |
 |---|---|
-| `title` | The paper title (without quotation marks — the website adds those automatically) |
-| `authors` | All authors, separated by commas |
-| `venue` | Journal or conference name |
-| `year` | The year as a number — **no quotes around it**: `2025` not `"2025"` |
-| `url` | A DOI link or paper URL. Leave as `""` for no link. |
+| `id` | A short unique identifier — lowercase, hyphens only (e.g. `housing-urban`). **Do not change this once projects are linked to it.** |
+| `title` | The full theme title shown on the site |
+| `tags` | Keywords separated by semicolons (e.g. `housing;urban;displacement`) |
+| `blurb` | A sentence or two describing the theme |
 
-> **Note on year:** The year column is the only one that should not have quotes around it. Write `2025`, not `"2025"`.
+---
+
+## Research projects (`data/projects.csv`)
+
+Each project appears under its theme on the **Research** page, and has its own detail page.
+
+| Column | What to put |
+|---|---|
+| `theme_id` | Must match an `id` from `research_themes.csv` |
+| `slug` | Short unique URL identifier — lowercase, hyphens (e.g. `climate-young-people`). **Do not change once set.** |
+| `title` | The full project title |
+| `period` | Date range, e.g. `2024–Present` or `2022–2024` |
+| `sites` | Field sites, separated by semicolons (e.g. `Jakarta; Makassar`) |
+| `role` | Your role (e.g. `Principal Investigator`, `Lead Researcher`) |
+| `funders` | Funding bodies, separated by semicolons |
+| `partners` | Partner organisations, separated by semicolons |
+| `summary` | 2–3 sentences summarising the project |
+| `long` | A longer paragraph for the project detail page (optional) |
+| `outputs` | Published outputs, separated by semicolons (e.g. `Journal article (2024); Policy brief (2023)`) |
+
+**To add a new project**, copy an existing row and fill in the columns.
+
+---
+
+## Publications (`data/publications.csv`)
+
+Publications appear grouped by theme on the **Publications** page.
+
+| Column | What to put |
+|---|---|
+| `theme` | The theme name to group under (e.g. `Housing and Urban Life`). Does **not** need to match research_themes — it's just a label. |
+| `kind` | Publication type: `Journal Article`, `Book Chapter`, `Edited Volume`, `Book`, `Report`, `Working Paper`, `Op-ed` |
+| `title` | The full publication title |
+| `authors` | All authors, comma-separated |
+| `venue` | Journal, publisher, or outlet name |
+| `year` | Year published, or `forthcoming` |
+| `url` | DOI or link. Leave blank for no link. |
+
+**To add a new publication**, add a new row. Publications within each theme appear in the order they are listed in the file.
+
+---
+
+## Public engagement (`data/engagement.csv`)
+
+Appears on the **Engagement** page, sorted into Podcasts, Writing, and Talks sections.
+
+| Column | What to put |
+|---|---|
+| `type` | Must be exactly: `Podcast`, `Writing`, or `Talk` |
+| `title` | Title of the podcast episode, article, or talk |
+| `venue` | The podcast name, publication, or institution |
+| `year` | Year (just the number) |
+| `location` | City/country for talks — leave blank for podcasts and writing |
+
+---
+
+## Collaborations (`data/collaborations.csv`)
+
+Appears on the **Collaborations** page.
+
+| Column | What to put |
+|---|---|
+| `name` | Organisation name |
+| `role` | Your role (e.g. `Research Affiliate`, `Partner Researcher`) |
+| `since` | Year the collaboration started (just the number, e.g. `2020`) |
+| `place` | City or country |
+| `note` | One sentence describing the collaboration |
+
+---
+
+## Awards (`data/awards.csv`)
+
+Also on the **Collaborations** page, in the Awards & Honours section.
+
+| Column | What to put |
+|---|---|
+| `year` | Year received |
+| `title` | Award name |
+| `body` | The awarding institution |
+| `note` | Optional: a brief note about what it was for |
+
+---
+
+## Grants (`data/grants.csv`)
+
+Also on the **Collaborations** page, in a dark inverted block.
+
+| Column | What to put |
+|---|---|
+| `period` | Date range, e.g. `2024–2027` |
+| `title` | Project title |
+| `funder` | Funding body |
+| `amount` | Amount awarded (e.g. `£280,000` or `AUD 540,000`) |
+| `role` | Your role on the grant |
+
+---
+
+## Fieldwork gallery (`data/gallery.csv`)
+
+Photos appear on the **Fieldwork** page in a filterable grid.
+
+| Column | What to put |
+|---|---|
+| `caption` | Caption for the photo |
+| `year` | Year the photo was taken |
+| `location` | Place name shown under the photo |
+| `tag` | Must be exactly: `urban`, `coastal`, or `rural` (used for filtering) |
+| `filename` | Filename of the image in the `assets/fieldwork/` folder (e.g. `jakarta-01.jpg`). Leave blank to show a placeholder. |
+
+**To upload fieldwork photos:**
+1. Go to your repository → `assets/` folder
+2. If there is no `fieldwork/` subfolder, create a dummy file: "Add file" → "Create new file" → type `assets/fieldwork/.gitkeep` → commit
+3. Then go to `assets/fieldwork/` and click "Add file" → "Upload files"
+4. After uploading, add the filename to the relevant row in `gallery.csv`
 
 ---
 
 ## Uploading a profile photo
 
-1. Go to your repository on GitHub
-2. Click on the `assets` folder (create it if it doesn't exist: "Add file" → "Create new file", name it `assets/.gitkeep`, commit)
-3. Click **"Add file"** → **"Upload files"**
-4. Drag your photo into the upload area, or click to browse
-5. Click **"Commit changes"**
-6. Now open `data/site.json`, find the `"photo"` line, and update it with your filename:
+1. Go to your repository → `assets/` folder
+2. Click **"Add file"** → **"Upload files"**
+3. Upload your photo (any format: jpg, png, webp)
+4. Open `data/site.json` and update the `"photo"` field with the filename:
    ```
-   "photo": "assets/your-photo-filename.jpg"
+   "photo": "assets/your-photo.jpg"
    ```
-
-The photo will appear as a circle on your profile page. A square photo works best, but any photo will work.
 
 ---
 
-## Setting up the contact form
+## CSV formatting rules (applies to all `.csv` files)
 
-The contact form on your Collaborate page uses a free service called **Formspree**, which forwards messages to your email.
-
-### One-time setup (takes about 2 minutes)
-
-1. Go to **[formspree.io](https://formspree.io)** and sign up for a free account using your email
-2. Click **"New Form"** and give it a name (e.g. "Website contact")
-3. You'll see a Form ID that looks like: `xpwzabcd`
-4. Open `data/site.json`, find the `"formspree_id"` line, and replace `YOUR_FORM_ID` with your actual ID:
-   ```
-   "formspree_id": "xpwzabcd"
-   ```
-5. Commit the changes — the form will now be active
-
-After setup, every message submitted through your website will be emailed to you.
+- **Always quote fields that contain commas** — wrap them in double quotes: `"Last, First"`
+- **To include a double quote** inside a quoted field, write it twice: `"She said ""hello"""`
+- **Semicolons** separate multiple values within a single field (sites, funders, outputs, tags)
+- **Leave a field blank** by putting nothing between the commas: `value,,next value`
+- **Do not add extra columns** — the site only reads the columns listed in the header row
 
 ---
 
 ## Common mistakes
 
-| What went wrong | How to fix it |
+| What happened | How to fix it |
 |---|---|
-| Yellow/red warning in GitHub editor | There's a formatting error. Close the tab without committing and try again carefully. |
-| A field is missing from the page | Check that the value in the data file is not empty. It should have something between the quotes. |
-| The contact form gives an error | Make sure you set your Formspree ID in `site.json` and that it matches exactly what Formspree shows. |
-| A link is not showing up | Make sure the URL starts with `https://` and is not just `""`. |
-| Changes not visible on the website | Wait 1–2 minutes and do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac). |
+| Page shows no data | Check the CSV for a missing or malformed header row |
+| A project doesn't appear on Research | Check that `theme_id` in `projects.csv` exactly matches an `id` in `research_themes.csv` |
+| A publication entry is missing | Check that the row doesn't have an extra or missing comma |
+| Photo not showing | Confirm the filename in `site.json` or `gallery.csv` matches the uploaded file exactly (case-sensitive) |
+| Changes not visible | Wait 1–2 minutes, then hard-refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac) |
 
 ---
 
-*If something is not working and you can't figure it out, take a screenshot of what you see and ask for help.*
+*If something is broken and you can't fix it, take a screenshot of what you see and ask for help.*
