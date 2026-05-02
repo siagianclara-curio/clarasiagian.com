@@ -295,12 +295,6 @@ function Home({ data, mobile, onNav }) {
 
         <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1.1fr 1fr", gap: mobile ? 32 : 64, alignItems: "start" }}>
           <div>
-            <h1 style={{
-              fontFamily: TOK.serif, fontSize: mobile ? 56 : 92,
-              lineHeight: 0.95, letterSpacing: "-0.025em", fontWeight: 300, margin: "0 0 28px",
-            }}>
-              <em style={{ fontStyle: "italic", color: TOK.accent }}>{site.name}</em>
-            </h1>
             <p style={{
               fontFamily: TOK.serif, fontSize: mobile ? 19 : 24, lineHeight: 1.4,
               fontWeight: 400, color: TOK.inkSoft, maxWidth: 520, margin: "0 0 36px",
