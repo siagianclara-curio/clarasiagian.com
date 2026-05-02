@@ -28,12 +28,10 @@ const shell = {
 
 const PAGES = [
   { label: "Home",           hash: "home" },
-  { label: "About",          hash: "about" },
   { label: "Research",       hash: "research" },
   { label: "Publications",   hash: "publications" },
   { label: "Engagement",     hash: "engagement" },
   { label: "Collaborations", hash: "collaborations" },
-  { label: "Fieldwork",      hash: "fieldwork" },
   { label: "Contact",        hash: "contact" },
 ];
 
@@ -87,13 +85,12 @@ async function loadData() {
   const json = url => get(url).then(r => r.json());
   const csv  = url => get(url).then(r => r.text()).then(parseCSV);
 
-  const [site, themes, projects, publications, currently,
+  const [site, themes, projects, publications,
          engagement, collaborations, awards, grants, gallery] = await Promise.all([
     json("data/site.json"),
     csv("data/research_themes.csv"),
     csv("data/projects.csv"),
     csv("data/publications.csv"),
-    csv("data/currently.csv"),
     csv("data/engagement.csv"),
     csv("data/collaborations.csv"),
     csv("data/awards.csv"),
@@ -135,7 +132,6 @@ async function loadData() {
     themeList,
     projectBySlug,
     pubThemes,
-    currently,
     engagement: {
       podcasts: engagement.filter(e => e.type === "Podcast"),
       writing:  engagement.filter(e => e.type === "Writing"),
@@ -246,7 +242,6 @@ function Footer({ mobile }) {
       fontSize: 12, color: TOK.inkSoft, letterSpacing: "0.04em",
     }}>
       <span style={{ fontFamily: TOK.mono }}>© CLARA SIAGIAN — {new Date().getFullYear()}</span>
-      <span style={{ fontFamily: TOK.serif, fontStyle: "italic", fontSize: 14 }}>— written from London —</span>
     </footer>
   );
 }
@@ -263,7 +258,7 @@ function Eyebrow({ children, light = false }) {
 function PageHeader({ eyebrow, title, em, lead, mobile }) {
   return (
     <>
-      <Eyebrow>{eyebrow}</Eyebrow>
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       {(title || em) && (
         <h1 style={{
           fontFamily: TOK.serif, fontSize: mobile ? 44 : 76, fontWeight: 300,
@@ -286,7 +281,14 @@ function PageHeader({ eyebrow, title, em, lead, mobile }) {
 // HOME
 // ─────────────────────────────────────────────────────────────────────────────
 function Home({ data, mobile, onNav }) {
-  const { site, currently } = data;
+  const { site } = data;
+  const bioParagraphs = (site.bio || "").split(/\n\n+/).filter(Boolean);
+  const { links = {} } = site;
+  const portraitLinks = [
+    { key: "orcid",    label: "ORCID" },
+    { key: "linkedin", label: "LinkedIn" },
+  ].filter(l => links[l.key]);
+
   return (
     <div style={shell}>
       <Nav active="home" mobile={mobile} onNav={onNav} />
@@ -294,7 +296,6 @@ function Home({ data, mobile, onNav }) {
 
         <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1.1fr 1fr", gap: mobile ? 32 : 64, alignItems: "start" }}>
           <div>
-            <Eyebrow>{site.role} · {site.affiliation}</Eyebrow>
             <h1 style={{
               fontFamily: TOK.serif, fontSize: mobile ? 56 : 92,
               lineHeight: 0.95, letterSpacing: "-0.025em", fontWeight: 300, margin: "0 0 28px",
@@ -307,7 +308,7 @@ function Home({ data, mobile, onNav }) {
             }}>
               {site.tagline}
             </p>
-            <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "center" }}>
+            <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
               <span onClick={() => onNav("research")} style={{
                 background: TOK.accent, color: TOK.bg, padding: "12px 22px",
                 fontSize: 13, letterSpacing: "0.04em", fontWeight: 500, cursor: "pointer",
@@ -321,62 +322,18 @@ function Home({ data, mobile, onNav }) {
                 Get in touch
               </span>
             </div>
+            {bioParagraphs.map((p, i) => (
+              <p key={i} style={{
+                fontFamily: TOK.serif, fontSize: mobile ? 17 : 19, lineHeight: 1.55,
+                fontWeight: 400, margin: "0 0 18px", color: TOK.ink,
+              }}>{p}</p>
+            ))}
           </div>
-          <Portrait src={site.photo} tone="teal" aspect="4 / 5" />
-        </div>
-
-        {currently.length > 0 && (
-          <section style={{ marginTop: mobile ? 64 : 120, paddingTop: 40, borderTop: `1px solid ${TOK.rule}` }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
-              <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 30 : 40, fontWeight: 400, margin: 0, letterSpacing: "-0.01em" }}>Currently</h2>
-              <span style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.16em", color: TOK.inkSoft, textTransform: "uppercase" }}>
-                {new Date().toLocaleString("en-GB", { month: "long", year: "numeric" })}
-              </span>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "repeat(3, 1fr)", gap: mobile ? 24 : 40 }}>
-              {currently.map((c, i) => (
-                <div key={i}>
-                  <div style={{ fontFamily: TOK.mono, fontSize: 10, letterSpacing: "0.18em", color: TOK.accent, textTransform: "uppercase", marginBottom: 12 }}>◦ {c.tag}</div>
-                  <h3 style={{ fontFamily: TOK.serif, fontSize: 24, margin: "0 0 8px", fontWeight: 500, letterSpacing: "-0.01em" }}>{c.title}</h3>
-                  <p style={{ margin: 0, color: TOK.inkSoft, fontSize: 14, lineHeight: 1.55 }}>{c.body}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-      </main>
-      <Footer mobile={mobile} />
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ABOUT
-// ─────────────────────────────────────────────────────────────────────────────
-function About({ data, mobile, onNav }) {
-  const { site } = data;
-  const bioParagraphs = (site.bio || "").split(/\n\n+/).filter(Boolean);
-  const { links = {}, education = [], methods } = site;
-
-  const socialLinks = [
-    { key: "orcid",     label: "ORCID" },
-    { key: "linkedin",  label: "LinkedIn" },
-    { key: "scholar",   label: "Google Scholar" },
-    { key: "bluesky",   label: "Bluesky" },
-  ].filter(l => links[l.key]);
-
-  return (
-    <div style={shell}>
-      <Nav active="about" mobile={mobile} onNav={onNav} />
-      <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
-        <PageHeader eyebrow="About" title="A social scientist" em="writing from Jakarta." mobile={mobile} />
-
-        <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1.4fr", gap: mobile ? 32 : 72 }}>
           <div>
             <Portrait src={site.photo} tone="teal" aspect="4 / 5" />
-            {socialLinks.length > 0 && (
-              <div style={{ marginTop: 24, borderTop: `1px solid ${TOK.rule}`, paddingTop: 20, fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.06em", color: TOK.inkSoft, lineHeight: 2 }}>
-                {socialLinks.map(l => (
+            {portraitLinks.length > 0 && (
+              <div style={{ marginTop: 20, borderTop: `1px solid ${TOK.rule}`, paddingTop: 16, fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.06em", lineHeight: 2 }}>
+                {portraitLinks.map(l => (
                   <a key={l.key} href={links[l.key]} target="_blank" rel="noopener"
                     style={{ display: "block", color: TOK.accent, textDecoration: "none" }}>
                     {l.label} →
@@ -385,42 +342,8 @@ function About({ data, mobile, onNav }) {
               </div>
             )}
           </div>
-          <div>
-            {bioParagraphs.map((p, i) => (
-              <p key={i} style={{
-                fontFamily: TOK.serif, fontSize: mobile ? 18 : 21, lineHeight: 1.55,
-                fontWeight: 400, margin: "0 0 22px", color: TOK.ink,
-              }}>{p}</p>
-            ))}
-
-            {education.length > 0 && (
-              <>
-                <h3 style={{ fontFamily: TOK.serif, fontSize: 26, fontWeight: 500, margin: "48px 0 18px", letterSpacing: "-0.01em" }}>Education</h3>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: 14, color: TOK.inkSoft }}>
-                  {education.map((e, i) => (
-                    <li key={i} style={{
-                      display: "grid",
-                      gridTemplateColumns: mobile ? "1fr auto" : "1fr 1fr auto",
-                      padding: "14px 0", borderTop: `1px solid ${TOK.rule}`, gap: 8, alignItems: "baseline",
-                    }}>
-                      <span style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.ink, gridColumn: mobile ? "1 / -1" : "auto" }}>{e.degree}</span>
-                      {!mobile && <span style={{ fontStyle: "italic", fontFamily: TOK.serif, fontSize: 15 }}>{e.institution}</span>}
-                      <span style={{ fontFamily: TOK.mono, fontSize: 12, color: TOK.accent }}>{e.year}</span>
-                      {mobile && <span style={{ gridColumn: "1 / -1", fontSize: 13, color: TOK.inkSoft, fontStyle: "italic", fontFamily: TOK.serif }}>{e.institution}</span>}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-            {methods && (
-              <>
-                <h3 style={{ fontFamily: TOK.serif, fontSize: 26, fontWeight: 500, margin: "48px 0 18px", letterSpacing: "-0.01em" }}>Methods I work with</h3>
-                <p style={{ fontSize: 16, lineHeight: 1.6, margin: 0, color: TOK.ink }}>{methods}</p>
-              </>
-            )}
-          </div>
         </div>
+
       </main>
       <Footer mobile={mobile} />
     </div>
@@ -432,6 +355,19 @@ function About({ data, mobile, onNav }) {
 // ─────────────────────────────────────────────────────────────────────────────
 const THEME_TONES = ["teal", "sand", "teal", "sand"];
 
+function ThemePhoto({ theme, tone, mobile }) {
+  const [failed, setFailed] = React.useState(false);
+  const aspect = mobile ? "5 / 4" : "4 / 5";
+  if (!theme.image || failed) {
+    return <FieldPlaceholder label={theme.title} tone={tone} aspect={aspect} />;
+  }
+  return (
+    <img src={"assets/themes/" + theme.image} alt={theme.title}
+      onError={() => setFailed(true)}
+      style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block" }} />
+  );
+}
+
 function Research({ data, mobile, onNav }) {
   const { themeList } = data;
   return (
@@ -439,7 +375,6 @@ function Research({ data, mobile, onNav }) {
       <Nav active="research" mobile={mobile} onNav={onNav} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0" }}>
         <PageHeader
-          eyebrow={`Research · ${themeList.length} Theme${themeList.length !== 1 ? "s" : ""}`}
           title="Research"
           em="projects"
           lead="My research moves across several themes. Each gathers a long arc of fieldwork, collaborations, and writing — built up over years rather than projects. Click any project to read more."
@@ -457,10 +392,9 @@ function Research({ data, mobile, onNav }) {
                 gap: mobile ? 24 : 56, alignItems: "start",
               }}>
                 <div style={{ order: mobile ? 0 : i % 2 === 0 ? 0 : 1 }}>
-                  <FieldPlaceholder label={t.title} tone={THEME_TONES[i % 4]} aspect={mobile ? "5 / 4" : "4 / 5"} />
+                  <ThemePhoto theme={t} tone={THEME_TONES[i % 4]} mobile={mobile} />
                 </div>
                 <div style={{ order: mobile ? 1 : i % 2 === 0 ? 1 : 0 }}>
-                  <Eyebrow>Theme 0{i + 1}</Eyebrow>
                   <h2 style={{
                     fontFamily: TOK.serif, fontSize: mobile ? 32 : 48, fontWeight: 400,
                     letterSpacing: "-0.02em", margin: "0 0 20px", lineHeight: 1.05,
@@ -517,6 +451,19 @@ function Research({ data, mobile, onNav }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // PROJECT DETAIL
 // ─────────────────────────────────────────────────────────────────────────────
+function ProjectBanner({ project, mobile }) {
+  const [failed, setFailed] = React.useState(false);
+  const aspect = mobile ? "5 / 3" : "16 / 7";
+  if (!project.image || failed) {
+    return <FieldPlaceholder label={project.title} tone="teal" aspect={aspect} />;
+  }
+  return (
+    <img src={"assets/projects/" + project.image} alt={project.title}
+      onError={() => setFailed(true)}
+      style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block" }} />
+  );
+}
+
 function ProjectDetail({ data, mobile, onNav, slug }) {
   const entry = data.projectBySlug[slug];
   if (!entry) return (
@@ -552,7 +499,7 @@ function ProjectDetail({ data, mobile, onNav, slug }) {
           letterSpacing: "-0.02em", margin: "0 0 32px", lineHeight: 1.02,
         }}>{project.title}</h1>
 
-        <FieldPlaceholder label={project.title} tone="teal" aspect={mobile ? "5 / 3" : "16 / 7"} />
+        <ProjectBanner project={project} mobile={mobile} />
 
         <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 2fr", gap: mobile ? 32 : 56, marginTop: 48 }}>
           <aside style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.06em", lineHeight: 1.9, color: TOK.inkSoft }}>
@@ -604,12 +551,12 @@ function Publications({ data, mobile, onNav }) {
     <div style={shell}>
       <Nav active="publications" mobile={mobile} onNav={onNav} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
-        <PageHeader eyebrow="Publications" title="Publications, by" em="theme" mobile={mobile} />
+        <PageHeader title="Publications, by" em="theme" mobile={mobile} />
         {pubThemes.length === 0 ? (
           <p style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.inkSoft }}>Publications coming soon.</p>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: mobile ? 48 : 72 }}>
-            {pubThemes.map((g, i) => (
+            {pubThemes.map((g) => (
               <section key={g.theme}>
                 <div style={{
                   display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 3fr",
@@ -617,7 +564,6 @@ function Publications({ data, mobile, onNav }) {
                   borderBottom: `1px solid ${TOK.rule}`, marginBottom: 8,
                 }}>
                   <div>
-                    <Eyebrow>Theme 0{i + 1}</Eyebrow>
                     <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 26 : 32, fontWeight: 500, letterSpacing: "-0.01em", margin: 0, lineHeight: 1.1 }}>{g.theme}</h2>
                   </div>
                   <div style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.08em", color: TOK.inkSoft, alignSelf: "end", textTransform: "uppercase" }}>
@@ -677,7 +623,7 @@ function Engagement({ data, mobile, onNav }) {
     <div style={shell}>
       <Nav active="engagement" mobile={mobile} onNav={onNav} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
-        <PageHeader eyebrow="Public Engagement" title="Public" em="engagement"
+        <PageHeader title="Public" em="engagement"
           lead="A selection of podcasts, public writing, and invited talks." mobile={mobile} />
 
         {sections.length === 0 ? (
@@ -732,7 +678,6 @@ function Collaborations({ data, mobile, onNav }) {
       <Nav active="collaborations" mobile={mobile} onNav={onNav} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
         <PageHeader
-          eyebrow="Collaborations · Awards · Grants"
           title="Collaborations, grants,"
           em="and awards"
           lead="Research is collective. These are the partners, funders, and recognitions that have made the work possible."
@@ -844,75 +789,6 @@ function Collaborations({ data, mobile, onNav }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FIELDWORK
-// ─────────────────────────────────────────────────────────────────────────────
-const GALLERY_TONES = { urban: "sand", coastal: "teal", rural: "sand" };
-
-function Fieldwork({ data, mobile, onNav }) {
-  const { gallery } = data;
-  const [filter, setFilter] = React.useState("all");
-  const filtered = filter === "all" ? gallery : gallery.filter(g => g.tag === filter);
-
-  return (
-    <div style={shell}>
-      <Nav active="fieldwork" mobile={mobile} onNav={onNav} />
-      <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0" }}>
-        <PageHeader
-          eyebrow="From the field"
-          title="Notes from"
-          em="fieldwork."
-          lead="Photographs from fieldwork across Indonesia — cities, coasts, and rural districts."
-          mobile={mobile}
-        />
-
-        {gallery.length === 0 ? (
-          <p style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.inkSoft }}>
-            Fieldwork photos coming soon.
-          </p>
-        ) : (
-          <>
-            <div style={{ display: "flex", gap: 8, marginBottom: 32, flexWrap: "wrap" }}>
-              {["all", "urban", "coastal", "rural"].map(f => (
-                <span key={f} onClick={() => setFilter(f)} style={{
-                  fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase",
-                  padding: "8px 14px", borderRadius: 999,
-                  border: `1px solid ${f === filter ? TOK.accent : TOK.rule}`,
-                  color: f === filter ? TOK.bg : TOK.ink,
-                  background: f === filter ? TOK.accent : "transparent",
-                  cursor: "pointer",
-                }}>{f}</span>
-              ))}
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr 1fr" : "repeat(3, 1fr)", gap: mobile ? 14 : 28 }}>
-              {filtered.map((g, i) => {
-                const span = !mobile && (i === 0 || i === 4) ? 2 : 1;
-                const tone = GALLERY_TONES[g.tag] || "sand";
-                const aspect = span === 2 ? "16 / 10" : "4 / 5";
-                return (
-                  <figure key={g.caption + i} style={{ margin: 0, gridColumn: `span ${span}` }}>
-                    {g.filename ? (
-                      <img src={"assets/fieldwork/" + g.filename} alt={g.caption}
-                        style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block" }} />
-                    ) : (
-                      <FieldPlaceholder label={g.caption} tone={tone} aspect={aspect} />
-                    )}
-                    <figcaption style={{ paddingTop: 12, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline", fontSize: 13 }}>
-                      <span style={{ fontFamily: TOK.serif, fontSize: 15, fontStyle: "italic", color: TOK.ink }}>{g.caption}</span>
-                      <span style={{ fontFamily: TOK.mono, fontSize: 10, letterSpacing: "0.12em", color: TOK.accent, textTransform: "uppercase", whiteSpace: "nowrap" }}>{g.location} · {g.year}</span>
-                    </figcaption>
-                  </figure>
-                );
-              })}
-            </div>
-          </>
-        )}
-      </main>
-      <Footer mobile={mobile} />
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // CONTACT
 // ─────────────────────────────────────────────────────────────────────────────
 function Contact({ data, mobile, onNav }) {
@@ -932,7 +808,6 @@ function Contact({ data, mobile, onNav }) {
     <div style={shell}>
       <Nav active="contact" mobile={mobile} onNav={onNav} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
-        <Eyebrow>Contact</Eyebrow>
         <h1 style={{ fontFamily: TOK.serif, fontSize: mobile ? 56 : 96, fontWeight: 300, letterSpacing: "-0.025em", margin: "0 0 24px", lineHeight: 0.95 }}>
           Let's <em style={{ fontStyle: "italic", color: TOK.accent }}>talk</em>.
         </h1>
@@ -989,12 +864,10 @@ function Contact({ data, mobile, onNav }) {
 // ─────────────────────────────────────────────────────────────────────────────
 const PAGE_MAP = {
   home:           Home,
-  about:          About,
   research:       Research,
   publications:   Publications,
   engagement:     Engagement,
   collaborations: Collaborations,
-  fieldwork:      Fieldwork,
   contact:        Contact,
 };
 

@@ -11,7 +11,7 @@ Your website content lives in the **`data/`** folder. Each file controls a diffe
 | File | Controls |
 |---|---|
 | `data/site.json` | Name, bio, photo, links, education, methods |
-| `data/currently.csv` | The 3 "Currently" spotlight items on the Home page |
+| `data/currently.csv` | *(unused — currently section removed)* |
 | `data/research_themes.csv` | Research theme names and descriptions |
 | `data/projects.csv` | Individual research projects (linked to themes) |
 | `data/publications.csv` | Publications list, grouped by theme |
@@ -131,6 +131,7 @@ Each project appears under its theme on the **Research** page, and has its own d
 | `summary` | 2–3 sentences summarising the project |
 | `long` | A longer paragraph for the project detail page (optional) |
 | `outputs` | Published outputs, separated by semicolons (e.g. `Journal article (2024); Policy brief (2023)`) |
+| `image` | Filename of a banner image for the project detail page (e.g. `climate-youth.jpg`). Upload to `assets/projects/`. Leave blank to show a placeholder. |
 
 **To add a new project**, copy an existing row and fill in the columns.
 
