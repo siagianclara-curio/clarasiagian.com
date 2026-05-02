@@ -31,7 +31,6 @@ const PAGES = [
   { label: "Research",       hash: "research" },
   { label: "Publications",   hash: "publications" },
   { label: "Engagement",     hash: "engagement" },
-  { label: "Collaborations", hash: "collaborations" },
   { label: "Contact",        hash: "contact" },
 ];
 
@@ -480,8 +479,8 @@ function ProjectDetail({ data, mobile, onNav, slug }) {
     { label: "Period",    value: project.period },
     { label: "Sites",     value: project.sites.join(" · ") },
     { label: "Role",      value: project.role },
-    { label: "Funders",   value: project.funders.join(" · ") },
-    { label: "Partners",  value: project.partners.join(" · ") },
+    { label: "Funding",        value: project.funders.join(" · ") },
+    { label: "Collaborators",  value: project.partners.join(" · ") },
   ].filter(f => f.value);
 
   return (
@@ -667,128 +666,6 @@ function Engagement({ data, mobile, onNav }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// COLLABORATIONS / AWARDS / GRANTS
-// ─────────────────────────────────────────────────────────────────────────────
-function Collaborations({ data, mobile, onNav }) {
-  const { collaborations, awards, grants } = data;
-  const hasAny = collaborations.length > 0 || awards.length > 0 || grants.length > 0;
-
-  return (
-    <div style={shell}>
-      <Nav active="collaborations" mobile={mobile} onNav={onNav} />
-      <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
-        <PageHeader
-          title="Collaborations, grants,"
-          em="and awards"
-          lead="Research is collective. These are the partners, funders, and recognitions that have made the work possible."
-          mobile={mobile}
-        />
-
-        {!hasAny && (
-          <p style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.inkSoft }}>Entries coming soon.</p>
-        )}
-
-        {collaborations.length > 0 && (
-          <section style={{ marginBottom: mobile ? 56 : 80 }}>
-            <div style={{
-              display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 3fr",
-              gap: mobile ? 12 : 56, paddingBottom: 20, borderBottom: `1px solid ${TOK.rule}`,
-            }}>
-              <div>
-                <Eyebrow>§ 01 Partners</Eyebrow>
-                <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 26 : 32, fontWeight: 500, letterSpacing: "-0.01em", margin: 0 }}>Collaborations</h2>
-              </div>
-              <div style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.08em", color: TOK.inkSoft, alignSelf: "end", textTransform: "uppercase" }}>{collaborations.length} organisations</div>
-            </div>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {collaborations.map((c, i) => (
-                <li key={i} style={{
-                  display: "grid",
-                  gridTemplateColumns: mobile ? "1fr" : "1.4fr 1fr 2fr 80px",
-                  gap: mobile ? 8 : 24, padding: "20px 0", borderBottom: `1px solid ${TOK.rule}`, alignItems: "baseline",
-                }}>
-                  <div style={{ fontFamily: TOK.serif, fontSize: mobile ? 19 : 22, fontWeight: 500, letterSpacing: "-0.005em" }}>{c.name}</div>
-                  <div style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: TOK.accent }}>{c.role}</div>
-                  <div style={{ fontFamily: TOK.serif, fontSize: 15, color: TOK.inkSoft, fontStyle: "italic" }}>{c.note}</div>
-                  {!mobile && <span style={{ fontFamily: TOK.mono, fontSize: 12, color: TOK.accent, textAlign: "right" }}>since {c.since}</span>}
-                  {mobile && <div style={{ fontFamily: TOK.mono, fontSize: 11, color: TOK.inkSoft }}>{c.place} · since {c.since}</div>}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {grants.length > 0 && (
-          <section style={{
-            background: TOK.bgDeep, color: "#e8ddc8",
-            margin: mobile ? "0 -20px" : "0 -56px",
-            padding: mobile ? "48px 20px" : "80px 56px",
-            marginBottom: mobile ? 56 : 80,
-          }}>
-            <div style={{
-              display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 3fr",
-              gap: mobile ? 12 : 56, paddingBottom: 20, borderBottom: "1px solid rgba(255,255,255,0.15)",
-              maxWidth: 1100, margin: "0 auto 20px",
-            }}>
-              <div>
-                <Eyebrow light>§ 02 Funded Projects</Eyebrow>
-                <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 26 : 32, fontWeight: 500, letterSpacing: "-0.01em", margin: 0, color: "#f1ece2" }}>Grants</h2>
-              </div>
-              <div style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.08em", color: "#c3d6d2", alignSelf: "end", textTransform: "uppercase" }}>{grants.length} active & recent</div>
-            </div>
-            <ul style={{ listStyle: "none", padding: 0, margin: "0 auto", maxWidth: 1100 }}>
-              {grants.map((g, i) => (
-                <li key={i} style={{
-                  display: "grid",
-                  gridTemplateColumns: mobile ? "1fr" : "100px 1fr 1fr 140px",
-                  gap: mobile ? 6 : 24, padding: "22px 0", borderBottom: "1px solid rgba(255,255,255,0.12)", alignItems: "baseline",
-                }}>
-                  <span style={{ fontFamily: TOK.mono, fontSize: 12, color: "#c3d6d2" }}>{g.period}</span>
-                  <div style={{ fontFamily: TOK.serif, fontSize: mobile ? 19 : 22, color: "#f1ece2", fontWeight: 500, letterSpacing: "-0.005em" }}>{g.title}</div>
-                  <div style={{ fontFamily: TOK.serif, fontSize: 15, fontStyle: "italic", color: "#c3d6d2" }}>{g.funder} · {g.role}</div>
-                  <span style={{ fontFamily: TOK.mono, fontSize: 12, color: "#f1ece2", textAlign: mobile ? "left" : "right" }}>{g.amount}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {awards.length > 0 && (
-          <section style={{ marginBottom: mobile ? 24 : 40 }}>
-            <div style={{
-              display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 3fr",
-              gap: mobile ? 12 : 56, paddingBottom: 20, borderBottom: `1px solid ${TOK.rule}`,
-            }}>
-              <div>
-                <Eyebrow>§ 03 Recognition</Eyebrow>
-                <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 26 : 32, fontWeight: 500, letterSpacing: "-0.01em", margin: 0 }}>Awards & Honours</h2>
-              </div>
-              <div style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.08em", color: TOK.inkSoft, alignSelf: "end", textTransform: "uppercase" }}>{awards.length} entries</div>
-            </div>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {awards.map((a, i) => (
-                <li key={i} style={{
-                  display: "grid",
-                  gridTemplateColumns: mobile ? "auto 1fr" : "80px 1fr 2fr",
-                  gap: mobile ? 12 : 24, padding: "20px 0", borderBottom: `1px solid ${TOK.rule}`, alignItems: "baseline",
-                }}>
-                  <span style={{ fontFamily: TOK.mono, fontSize: 12, color: TOK.accent }}>{a.year}</span>
-                  <div style={{ fontFamily: TOK.serif, fontSize: mobile ? 19 : 22, fontWeight: 500, letterSpacing: "-0.005em", gridColumn: mobile ? "1 / -1" : "auto" }}>{a.title}</div>
-                  <div style={{ fontFamily: TOK.serif, fontSize: 15, color: TOK.inkSoft, fontStyle: "italic", gridColumn: mobile ? "1 / -1" : "auto" }}>
-                    {a.body}{a.note ? ` — ${a.note}` : ""}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </main>
-      <Footer mobile={mobile} />
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // CONTACT
 // ─────────────────────────────────────────────────────────────────────────────
 function Contact({ data, mobile, onNav }) {
@@ -867,7 +744,6 @@ const PAGE_MAP = {
   research:       Research,
   publications:   Publications,
   engagement:     Engagement,
-  collaborations: Collaborations,
   contact:        Contact,
 };
 
