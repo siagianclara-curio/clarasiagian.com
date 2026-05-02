@@ -1,23 +1,23 @@
 {
   "name": "Clara Siagian",
-  "title": "Early Career Researcher",
-  "institution": "Your University or Institution, Country",
+  "title": "Postdoctoral researcher",
+  "institution": "Bartlett Development Planning Unit, University College London",
   "photo": "assets/profile.jpg",
-  "bio": "I am a researcher working at the intersection of [your field] and [related area]. My work explores [key questions or themes you investigate]. I am particularly interested in how [a specific angle or approach]. Currently, I am based at [your institution] where I am working on [current project or position].",
+  "bio": "I examine the intersection of people, place, and politics to understand how young people navigate state interventions in the Asia-Pacific. With a focus on Indonesia, my research spans housing, urban development, and climate governance, grounded in ten years of participatory fieldwork. I have an exceptional track record of independent leadership, including AU$1.1M in funding and six peer-reviewed articles (5 in Q1; 210+ citations). My work translates complex social dynamics into actionable policy knowledge, currently supported by a prestigious postdoctoral appointment at Bartlett Development Planning Unit, University College London. Complementing my academic output, I have consulted for the World Bank and UN agencies, bringing research-based policy insights into global development agenda.",
   "interests": [
-    "Research Interest One",
-    "Research Interest Two",
-    "Research Interest Three",
-    "Research Interest Four",
-    "Research Interest Five"
+    "Youth studies",
+    "Urban development",
+    "Social policy",
+    "participatory and creative methodology",
+    "Southeast Asia"
   ],
   "links": {
     "scholar": "",
-    "orcid": "",
+    "orcid": "https://orcid.org/0000-0002-4413-1446",
     "researchgate": "",
-    "linkedin": "",
-    "email": "clara@example.com"
+    "linkedin": "https://www.linkedin.com/in/clara-siagian/",
+    "email": "siagian.clara@gmail.com"
   },
-  "collaborate_intro": "I am open to research collaborations, speaking invitations, and opportunities to engage on topics related to my work. Whether you are a fellow researcher, a practitioner, or simply curious — feel free to reach out. I would love to hear from you.",
+  "collaborate_intro": "I am open to research collaboration and opportunities to engage on topics related to my work. Whether you are a fellow researcher, a practitioner, or simply curious — feel free to reach out. I would love to hear from you.",
   "formspree_id": "YOUR_FORM_ID"
 }
