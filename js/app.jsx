@@ -84,17 +84,12 @@ async function loadData() {
   const json = url => get(url).then(r => r.json());
   const csv  = url => get(url).then(r => r.text()).then(parseCSV);
 
-  const [site, themes, projects, publications,
-         engagement, collaborations, awards, grants, gallery] = await Promise.all([
+  const [site, themes, projects, publications, engagement] = await Promise.all([
     json("data/site.json"),
     csv("data/research_themes.csv"),
     csv("data/projects.csv"),
     csv("data/publications.csv"),
     csv("data/engagement.csv"),
-    csv("data/collaborations.csv"),
-    csv("data/awards.csv"),
-    csv("data/grants.csv"),
-    csv("data/gallery.csv"),
   ]);
 
   // Join themes + projects
@@ -136,10 +131,6 @@ async function loadData() {
       writing:  engagement.filter(e => e.type === "Writing"),
       talks:    engagement.filter(e => e.type === "Talk"),
     },
-    collaborations,
-    awards,
-    grants,
-    gallery,
   };
 }
 

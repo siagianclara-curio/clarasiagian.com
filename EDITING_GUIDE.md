@@ -11,15 +11,10 @@ Your website content lives in the **`data/`** folder. Each file controls a diffe
 | File | Controls |
 |---|---|
 | `data/site.json` | Name, bio, photo, links, education, methods |
-| `data/currently.csv` | *(unused — currently section removed)* |
 | `data/research_themes.csv` | Research theme names and descriptions |
 | `data/projects.csv` | Individual research projects (linked to themes) |
 | `data/publications.csv` | Publications list, grouped by theme |
 | `data/engagement.csv` | Podcasts, public writing, invited talks |
-| `data/collaborations.csv` | Institutional collaborations |
-| `data/awards.csv` | Awards and honours |
-| `data/grants.csv` | Research grants and funding |
-| `data/gallery.csv` | Fieldwork photo gallery |
 
 ---
 
@@ -40,7 +35,7 @@ Your website content lives in the **`data/`** folder. Each file controls a diffe
 
 ## Updating your profile (`data/site.json`)
 
-This controls the **Home** and **About** pages.
+This controls the **Home** page (bio, tagline, photo, links) and the **Contact** page (email).
 
 ### Fields explained
 
@@ -48,14 +43,13 @@ This controls the **Home** and **About** pages.
 "name"        → Your name as it appears everywhere on the site
 "role"        → Your job title or role
 "affiliation" → Your institution and department
-"tagline"     → A one-line description shown on the Home page (under your name)
-"bio"         → Your bio text, shown on the About page.
+"tagline"     → A one-line description shown on the Home page
+"bio"         → Your bio text, shown on the Home page.
                To create paragraph breaks, type \n\n between paragraphs (two backslash-n).
                Example: "First paragraph.\n\nSecond paragraph."
 "email"       → Your email address
 "location"    → Your city/country
 "photo"       → Path to your profile photo, e.g. "assets/profile.jpg"
-"methods"     → A sentence or two about your research methods (About page)
 
 "education"   → A list of your degrees. Each entry has:
                 "degree"      → e.g. "PhD, Anthropology"
@@ -64,8 +58,8 @@ This controls the **Home** and **About** pages.
 
 "links"       → Your academic profiles. Leave as "" to hide.
   "scholar"     → Google Scholar profile URL
-  "orcid"       → ORCID profile URL
-  "linkedin"    → LinkedIn profile URL
+  "orcid"       → ORCID profile URL (shown under portrait on Home)
+  "linkedin"    → LinkedIn profile URL (shown under portrait on Home)
   "bluesky"     → Bluesky profile URL
   "researchgate"→ ResearchGate profile URL
   "email"       → Your email (also used on the Contact page)
@@ -79,28 +73,6 @@ This controls the **Home** and **About** pages.
 
 ---
 
-## Home page spotlight (`data/currently.csv`)
-
-The **"Currently"** section on the Home page shows 3 short items. Each row has:
-
-| Column | What to put |
-|---|---|
-| `tag` | A short category label (e.g. Writing, Research, Fieldwork) |
-| `title` | A short title for the item |
-| `body` | A sentence or two of detail |
-
-**Example:**
-```
-tag,title,body
-Writing,Book in Progress,"Co-editing a volume on Early Childhood Development, forthcoming from Oxford University Press."
-Research,Climate & Youth,"Investigating how young people across Indonesia adapt to environmental change."
-Collaboration,Open for Partnerships,"Available for collaborations on housing, youth, and social policy."
-```
-
-Update these whenever you start something new or want to highlight different work.
-
----
-
 ## Research themes (`data/research_themes.csv`)
 
 Themes group your projects on the **Research** page. Each row is one theme:
@@ -111,6 +83,7 @@ Themes group your projects on the **Research** page. Each row is one theme:
 | `title` | The full theme title shown on the site |
 | `tags` | Keywords separated by semicolons (e.g. `housing;urban;displacement`) |
 | `blurb` | A sentence or two describing the theme |
+| `image` | Filename of a photo for this theme (e.g. `housing.jpg`). Upload to `assets/themes/`. Leave blank to show a placeholder. |
 
 ---
 
@@ -124,13 +97,13 @@ Each project appears under its theme on the **Research** page, and has its own d
 | `slug` | Short unique URL identifier — lowercase, hyphens (e.g. `climate-young-people`). **Do not change once set.** |
 | `title` | The full project title |
 | `period` | Date range, e.g. `2024–Present` or `2022–2024` |
-| `sites` | Field sites, separated by semicolons (e.g. `Jakarta; Makassar`) |
+| `sites` | Field sites, separated by semicolons (e.g. `Jakarta;Makassar`) |
 | `role` | Your role (e.g. `Principal Investigator`, `Lead Researcher`) |
-| `funders` | Funding bodies, separated by semicolons |
-| `partners` | Partner organisations, separated by semicolons |
+| `funders` | Funding bodies, separated by semicolons — shown as **Funding** on the project page |
+| `partners` | Partner organisations, separated by semicolons — shown as **Collaborators** on the project page |
 | `summary` | 2–3 sentences summarising the project |
 | `long` | A longer paragraph for the project detail page (optional) |
-| `outputs` | Published outputs, separated by semicolons (e.g. `Journal article (2024); Policy brief (2023)`) |
+| `outputs` | Published outputs, separated by semicolons (e.g. `Journal article (2024);Policy brief (2023)`) |
 | `image` | Filename of a banner image for the project detail page (e.g. `climate-youth.jpg`). Upload to `assets/projects/`. Leave blank to show a placeholder. |
 
 **To add a new project**, copy an existing row and fill in the columns.
@@ -169,67 +142,6 @@ Appears on the **Engagement** page, sorted into Podcasts, Writing, and Talks sec
 
 ---
 
-## Collaborations (`data/collaborations.csv`)
-
-Appears on the **Collaborations** page.
-
-| Column | What to put |
-|---|---|
-| `name` | Organisation name |
-| `role` | Your role (e.g. `Research Affiliate`, `Partner Researcher`) |
-| `since` | Year the collaboration started (just the number, e.g. `2020`) |
-| `place` | City or country |
-| `note` | One sentence describing the collaboration |
-
----
-
-## Awards (`data/awards.csv`)
-
-Also on the **Collaborations** page, in the Awards & Honours section.
-
-| Column | What to put |
-|---|---|
-| `year` | Year received |
-| `title` | Award name |
-| `body` | The awarding institution |
-| `note` | Optional: a brief note about what it was for |
-
----
-
-## Grants (`data/grants.csv`)
-
-Also on the **Collaborations** page, in a dark inverted block.
-
-| Column | What to put |
-|---|---|
-| `period` | Date range, e.g. `2024–2027` |
-| `title` | Project title |
-| `funder` | Funding body |
-| `amount` | Amount awarded (e.g. `£280,000` or `AUD 540,000`) |
-| `role` | Your role on the grant |
-
----
-
-## Fieldwork gallery (`data/gallery.csv`)
-
-Photos appear on the **Fieldwork** page in a filterable grid.
-
-| Column | What to put |
-|---|---|
-| `caption` | Caption for the photo |
-| `year` | Year the photo was taken |
-| `location` | Place name shown under the photo |
-| `tag` | Must be exactly: `urban`, `coastal`, or `rural` (used for filtering) |
-| `filename` | Filename of the image in the `assets/fieldwork/` folder (e.g. `jakarta-01.jpg`). Leave blank to show a placeholder. |
-
-**To upload fieldwork photos:**
-1. Go to your repository → `assets/` folder
-2. If there is no `fieldwork/` subfolder, create a dummy file: "Add file" → "Create new file" → type `assets/fieldwork/.gitkeep` → commit
-3. Then go to `assets/fieldwork/` and click "Add file" → "Upload files"
-4. After uploading, add the filename to the relevant row in `gallery.csv`
-
----
-
 ## Uploading a profile photo
 
 1. Go to your repository → `assets/` folder
@@ -259,7 +171,7 @@ Photos appear on the **Fieldwork** page in a filterable grid.
 | Page shows no data | Check the CSV for a missing or malformed header row |
 | A project doesn't appear on Research | Check that `theme_id` in `projects.csv` exactly matches an `id` in `research_themes.csv` |
 | A publication entry is missing | Check that the row doesn't have an extra or missing comma |
-| Photo not showing | Confirm the filename in `site.json` or `gallery.csv` matches the uploaded file exactly (case-sensitive) |
+| Photo not showing | Confirm the filename in `site.json`, `projects.csv`, or `research_themes.csv` matches the uploaded file exactly (case-sensitive) |
 | Changes not visible | Wait 1–2 minutes, then hard-refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac) |
 
 ---
