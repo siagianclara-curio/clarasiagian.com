@@ -57,11 +57,14 @@ This controls the **Home** page (bio, tagline, photo, links) and the **Contact**
                 "year"        → e.g. "2022"
 
 "links"       → Your academic profiles. Leave as "" to hide.
-  "scholar"     → Google Scholar profile URL
-  "orcid"       → ORCID profile URL (shown under portrait on Home)
-  "linkedin"    → LinkedIn profile URL (shown under portrait on Home)
-  "bluesky"     → Bluesky profile URL
-  "researchgate"→ ResearchGate profile URL
+  "orcid"       → ORCID profile URL (shown under portrait on Home, and on Contact)
+  "linkedin"    → LinkedIn profile URL (shown under portrait on Home, and on Contact)
+  "scholar"     → Google Scholar profile URL (shown on Contact page)
+  "researchgate"→ ResearchGate profile URL (shown on Contact page)
+  "bluesky"     → Bluesky profile URL (shown on Contact page)
+  "yupcities"   → YUP Cities profile URL (shown under portrait on Home, and on Contact)
+  "puskapa"     → Puskapa profile URL (shown under portrait on Home, and on Contact)
+  "cv"          → Curriculum Vitae URL (shown under portrait on Home, and on Contact)
   "email"       → Your email (also used on the Contact page)
 ```
 
@@ -130,15 +133,15 @@ Publications appear grouped by theme on the **Publications** page.
 
 ## Public engagement (`data/engagement.csv`)
 
-Appears on the **Engagement** page, sorted into Podcasts, Writing, and Talks sections.
+Appears on the **Engagement** page. Each unique value in the `type` column becomes its own section — you can use any labels you like (e.g. `Public Talks`, `Essays`, `Podcast`).
 
 | Column | What to put |
 |---|---|
-| `type` | Must be exactly: `Podcast`, `Writing`, or `Talk` |
+| `type` | Section label (any text). Entries with the same type are grouped together (e.g. `Public Talks`, `Podcast`, `Essays`). |
 | `title` | Title of the podcast episode, article, or talk |
 | `venue` | The podcast name, publication, or institution |
 | `year` | Year (just the number) |
-| `location` | City/country for talks — leave blank for podcasts and writing |
+| `location` | City/country or other context — leave blank if not needed |
 
 ---
 
