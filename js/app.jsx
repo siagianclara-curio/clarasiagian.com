@@ -313,6 +313,8 @@ function Home({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const portraitLinks = [
     { key: "orcid",    label: "ORCID" },
     { key: "linkedin", label: "LinkedIn" },
+    { key: "yupcities", label: "YUP Project" },
+    { key: "puskapa", label: "Puskapa Universitas Indonesia" },
   ].filter(l => links[l.key]);
 
   return (
@@ -694,6 +696,8 @@ function Contact({ data, mobile, onNav, menuOpen, onToggleMenu }) {
     { label: "LinkedIn",       url: links.linkedin },
     { label: "Bluesky",        url: links.bluesky },
     { label: "ResearchGate",   url: links.researchgate },
+    { label: "YUP Cities",     url: links.yupcities },
+    { label: "Puskapa",        url: links.puskapa },
   ].filter(l => l.url);
 
   return (
