@@ -76,6 +76,21 @@ function splitSemi(str) {
   return (str || "").split(";").map(s => s.trim()).filter(Boolean);
 }
 
+function linkify(text) {
+  if (!text || typeof text !== "string") return text;
+  const regex = /(https?:\/\/[^\s<>"']+)/g;
+  const parts = [];
+  let last = 0;
+  let m;
+  while ((m = regex.exec(text)) !== null) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    parts.push(<a key={m.index} href={m[0]} target="_blank" rel="noopener" style={{ color: TOK.accent, textDecoration: "underline" }}>{m[0]}</a>);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts.length ? parts : text;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DATA LOADER
 // ─────────────────────────────────────────────────────────────────────────────
@@ -126,11 +141,15 @@ async function loadData() {
     themeList,
     projectBySlug,
     pubThemes,
-    engagement: {
-      podcasts: engagement.filter(e => e.type === "Podcast"),
-      writing:  engagement.filter(e => e.type === "Writing"),
-      talks:    engagement.filter(e => e.type === "Talk"),
-    },
+    engagement: (() => {
+      const groups = [];
+      engagement.forEach(e => {
+        let group = groups.find(g => g.type === e.type);
+        if (!group) { group = { type: e.type, items: [] }; groups.push(group); }
+        group.items.push(e);
+      });
+      return groups;
+    })(),
   };
 }
 
@@ -178,24 +197,40 @@ function Portrait({ src, tone = "teal", aspect = "4 / 5" }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // SHARED COMPONENTS
 // ─────────────────────────────────────────────────────────────────────────────
-function Nav({ active, mobile, onNav }) {
+function Nav({ active, mobile, onNav, menuOpen, onToggleMenu }) {
   if (mobile) {
     return (
-      <header style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "18px 20px", borderBottom: `1px solid ${TOK.rule}`,
-        background: TOK.bg, position: "sticky", top: 0, zIndex: 10,
-      }}>
-        <div onClick={() => onNav("home")}
-          style={{ fontFamily: TOK.serif, fontSize: 22, fontStyle: "italic", fontWeight: 400, cursor: "pointer" }}>
-          Clara Siagian
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 4, cursor: "pointer" }}>
-          <span style={{ width: 18, height: 1.5, background: TOK.ink, display: "block" }} />
-          <span style={{ width: 18, height: 1.5, background: TOK.ink, display: "block" }} />
-          <span style={{ width: 12, height: 1.5, background: TOK.ink, display: "block" }} />
-        </div>
-      </header>
+      <>
+        <header style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          padding: "18px 20px", borderBottom: `1px solid ${TOK.rule}`,
+          background: TOK.bg, position: "sticky", top: 0, zIndex: 20,
+        }}>
+          <div onClick={() => { onNav("home"); if (menuOpen) onToggleMenu(); }}
+            style={{ fontFamily: TOK.serif, fontSize: 22, fontStyle: "italic", fontWeight: 400, cursor: "pointer" }}>
+            Clara Siagian
+          </div>
+          <div onClick={onToggleMenu} style={{ display: "flex", flexDirection: "column", gap: 4, cursor: "pointer" }}>
+            <span style={{ width: 18, height: 1.5, background: TOK.ink, display: "block" }} />
+            <span style={{ width: 18, height: 1.5, background: TOK.ink, display: "block" }} />
+            <span style={{ width: 12, height: 1.5, background: TOK.ink, display: "block" }} />
+          </div>
+        </header>
+        {menuOpen && (
+          <div style={{
+            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+            background: TOK.bg, zIndex: 15, padding: "80px 28px 40px",
+            display: "flex", flexDirection: "column", gap: 24,
+          }}>
+            {PAGES.map(p => (
+              <div key={p.hash} onClick={() => onNav(p.hash)} style={{
+                fontFamily: TOK.serif, fontSize: 28, fontWeight: 400,
+                color: p.hash === active ? TOK.accent : TOK.ink, cursor: "pointer",
+              }}>{p.label}</div>
+            ))}
+          </div>
+        )}
+      </>
     );
   }
   return (
@@ -271,7 +306,7 @@ function PageHeader({ eyebrow, title, em, lead, mobile }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // HOME
 // ─────────────────────────────────────────────────────────────────────────────
-function Home({ data, mobile, onNav }) {
+function Home({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const { site } = data;
   const bioParagraphs = (site.bio || "").split(/\n\n+/).filter(Boolean);
   const { links = {} } = site;
@@ -282,7 +317,7 @@ function Home({ data, mobile, onNav }) {
 
   return (
     <div style={shell}>
-      <Nav active="home" mobile={mobile} onNav={onNav} />
+      <Nav active="home" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "32px 20px 0" : "72px 56px 0" }}>
 
         <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1.1fr 1fr", gap: mobile ? 32 : 64, alignItems: "start" }}>
@@ -291,7 +326,7 @@ function Home({ data, mobile, onNav }) {
               fontFamily: TOK.serif, fontSize: mobile ? 19 : 24, lineHeight: 1.4,
               fontWeight: 400, color: TOK.inkSoft, maxWidth: 520, margin: "0 0 36px",
             }}>
-              {site.tagline}
+              {linkify(site.tagline)}
             </p>
             <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "center", marginBottom: 36 }}>
               <span onClick={() => onNav("research")} style={{
@@ -311,7 +346,7 @@ function Home({ data, mobile, onNav }) {
               <p key={i} style={{
                 fontFamily: TOK.serif, fontSize: mobile ? 17 : 19, lineHeight: 1.55,
                 fontWeight: 400, margin: "0 0 18px", color: TOK.ink,
-              }}>{p}</p>
+              }}>{linkify(p)}</p>
             ))}
           </div>
           <div>
@@ -353,11 +388,11 @@ function ThemePhoto({ theme, tone, mobile }) {
   );
 }
 
-function Research({ data, mobile, onNav }) {
+function Research({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const { themeList } = data;
   return (
     <div style={shell}>
-      <Nav active="research" mobile={mobile} onNav={onNav} />
+      <Nav active="research" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0" }}>
         <PageHeader
           title="Research"
@@ -414,7 +449,7 @@ function Research({ data, mobile, onNav }) {
                           <div>
                             <div style={{ fontFamily: TOK.serif, fontSize: mobile ? 17 : 19, fontWeight: 500, lineHeight: 1.25, color: TOK.ink }}>{p.title}</div>
                             <div style={{ fontFamily: TOK.mono, fontSize: 11, color: TOK.inkSoft, marginTop: 4, letterSpacing: "0.05em" }}>
-                              {[p.period, p.sites.join(", "), p.role].filter(Boolean).join(" · ")}
+                              {linkify([p.period, p.sites.join(", "), p.role].filter(Boolean).join(" · "))}
                             </div>
                           </div>
                           <span style={{ fontFamily: TOK.mono, fontSize: 13, color: TOK.accent, letterSpacing: "0.08em" }}>READ →</span>
@@ -449,11 +484,11 @@ function ProjectBanner({ project, mobile }) {
   );
 }
 
-function ProjectDetail({ data, mobile, onNav, slug }) {
+function ProjectDetail({ data, mobile, onNav, slug, menuOpen, onToggleMenu }) {
   const entry = data.projectBySlug[slug];
   if (!entry) return (
     <div style={shell}>
-      <Nav active="research" mobile={mobile} onNav={onNav} />
+      <Nav active="research" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "40px 20px" : "80px 56px" }}>
         <p style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.inkSoft }}>Project not found.</p>
       </main>
@@ -471,7 +506,7 @@ function ProjectDetail({ data, mobile, onNav, slug }) {
 
   return (
     <div style={shell}>
-      <Nav active="research" mobile={mobile} onNav={onNav} />
+      <Nav active="research" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "32px 20px 0" : "56px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
         <span onClick={() => onNav("research")}
           style={{ fontFamily: TOK.mono, fontSize: 11, letterSpacing: "0.14em", color: TOK.accent, textTransform: "uppercase", cursor: "pointer", display: "inline-block", marginBottom: 24 }}>
@@ -491,19 +526,19 @@ function ProjectDetail({ data, mobile, onNav, slug }) {
             {metaFields.map(f => (
               <div key={f.label} style={{ marginBottom: 18 }}>
                 <div style={{ color: TOK.accent, marginBottom: 4, textTransform: "uppercase" }}>{f.label}</div>
-                <div style={{ fontFamily: TOK.sans, fontSize: 14, color: TOK.ink, letterSpacing: 0, lineHeight: 1.4 }}>{f.value}</div>
+                <div style={{ fontFamily: TOK.sans, fontSize: 14, color: TOK.ink, letterSpacing: 0, lineHeight: 1.4 }}>{linkify(f.value)}</div>
               </div>
             ))}
           </aside>
           <div>
             {project.summary && (
               <p style={{ fontFamily: TOK.serif, fontSize: mobile ? 19 : 22, lineHeight: 1.45, color: TOK.ink, margin: "0 0 24px", fontWeight: 400 }}>
-                {project.summary}
+                {linkify(project.summary)}
               </p>
             )}
             {project.long && (
               <p style={{ fontFamily: TOK.serif, fontSize: mobile ? 17 : 18, lineHeight: 1.6, color: TOK.inkSoft, margin: "0 0 36px" }}>
-                {project.long}
+                {linkify(project.long)}
               </p>
             )}
             {project.outputs.length > 0 && (
@@ -514,7 +549,7 @@ function ProjectDetail({ data, mobile, onNav, slug }) {
                     <li key={i} style={{
                       padding: "12px 0", borderTop: `1px solid ${TOK.rule}`,
                       fontFamily: TOK.serif, fontSize: 17, fontStyle: "italic", color: TOK.ink,
-                    }}>— {o}</li>
+                    }}>— {linkify(o)}</li>
                   ))}
                 </ul>
               </>
@@ -530,11 +565,11 @@ function ProjectDetail({ data, mobile, onNav, slug }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // PUBLICATIONS
 // ─────────────────────────────────────────────────────────────────────────────
-function Publications({ data, mobile, onNav }) {
+function Publications({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const { pubThemes } = data;
   return (
     <div style={shell}>
-      <Nav active="publications" mobile={mobile} onNav={onNav} />
+      <Nav active="publications" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
         <PageHeader title="Publications, by" em="theme" mobile={mobile} />
         {pubThemes.length === 0 ? (
@@ -574,8 +609,8 @@ function Publications({ data, mobile, onNav }) {
                           ) : it.title}
                         </div>
                         <div style={{ fontFamily: TOK.serif, fontSize: 14, color: TOK.inkSoft, fontStyle: "italic" }}>
-                          {it.authors && <span style={{ fontStyle: "normal", marginRight: 8 }}>{it.authors} ·</span>}
-                          {it.venue}
+                          {it.authors && <span style={{ fontStyle: "normal", marginRight: 8 }}>{linkify(it.authors)} ·</span>}
+                          {linkify(it.venue)}
                           {mobile && <span style={{ fontFamily: TOK.mono, fontStyle: "normal", marginLeft: 12, color: TOK.accent }}>{it.year}</span>}
                         </div>
                       </div>
@@ -596,17 +631,13 @@ function Publications({ data, mobile, onNav }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // ENGAGEMENT
 // ─────────────────────────────────────────────────────────────────────────────
-function Engagement({ data, mobile, onNav }) {
+function Engagement({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const { engagement } = data;
-  const sections = [
-    { name: "Podcasts",      subtitle: "Conversations",        items: engagement.podcasts, kind: "Audio" },
-    { name: "Public Writing", subtitle: "Op-eds & Essays",     items: engagement.writing,  kind: "Essay" },
-    { name: "Invited Talks",  subtitle: "Lectures & Workshops", items: engagement.talks,   kind: "Talk"  },
-  ].filter(s => s.items.length > 0);
+  const sections = engagement.filter(g => g.items.length > 0);
 
   return (
     <div style={shell}>
-      <Nav active="engagement" mobile={mobile} onNav={onNav} />
+      <Nav active="engagement" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
         <PageHeader title="Public" em="engagement"
           lead="A selection of podcasts, public writing, and invited talks." mobile={mobile} />
@@ -614,28 +645,26 @@ function Engagement({ data, mobile, onNav }) {
         {sections.length === 0 ? (
           <p style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.inkSoft }}>Engagement entries coming soon.</p>
         ) : sections.map(sec => (
-          <section key={sec.name} style={{ marginBottom: 64 }}>
+          <section key={sec.type} style={{ marginBottom: 64 }}>
             <div style={{
               display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 3fr",
               gap: mobile ? 8 : 56, paddingBottom: 20, borderBottom: `1px solid ${TOK.rule}`, marginBottom: 8,
             }}>
               <div>
-                <Eyebrow>{sec.subtitle}</Eyebrow>
-                <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 26 : 32, fontWeight: 500, letterSpacing: "-0.01em", margin: 0 }}>{sec.name}</h2>
+                <h2 style={{ fontFamily: TOK.serif, fontSize: mobile ? 26 : 32, fontWeight: 500, letterSpacing: "-0.01em", margin: 0 }}>{sec.type}</h2>
               </div>
             </div>
             <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {sec.items.map((it, i) => (
                 <li key={i} style={{
-                  display: "grid", gridTemplateColumns: mobile ? "auto 1fr" : "100px 1fr 60px",
+                  display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 60px",
                   gap: mobile ? 12 : 24, padding: "18px 0",
                   borderBottom: `1px solid ${TOK.rule}`, alignItems: "baseline",
                 }}>
-                  <span style={{ fontFamily: TOK.mono, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: TOK.accent }}>◦ {sec.kind}</span>
-                  <div style={{ gridColumn: mobile ? "1 / -1" : "auto" }}>
-                    <div style={{ fontFamily: TOK.serif, fontSize: mobile ? 18 : 20, lineHeight: 1.3, marginBottom: 2, fontWeight: 500 }}>{it.title}</div>
+                  <div>
+                    <div style={{ fontFamily: TOK.serif, fontSize: mobile ? 18 : 20, lineHeight: 1.3, marginBottom: 2, fontWeight: 500 }}>{linkify(it.title)}</div>
                     <div style={{ fontFamily: TOK.serif, fontSize: 14, color: TOK.inkSoft, fontStyle: "italic" }}>
-                      {it.venue}{it.location ? ` · ${it.location}` : ""}
+                      {linkify(it.venue)}{it.location ? " · " : ""}{linkify(it.location)}
                       {mobile && <span style={{ fontFamily: TOK.mono, fontStyle: "normal", marginLeft: 12, color: TOK.accent }}>{it.year}</span>}
                     </div>
                   </div>
@@ -654,7 +683,7 @@ function Engagement({ data, mobile, onNav }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // CONTACT
 // ─────────────────────────────────────────────────────────────────────────────
-function Contact({ data, mobile, onNav }) {
+function Contact({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const { site } = data;
   const { links = {} } = site;
   const email = site.email || links.email;
@@ -669,13 +698,13 @@ function Contact({ data, mobile, onNav }) {
 
   return (
     <div style={shell}>
-      <Nav active="contact" mobile={mobile} onNav={onNav} />
+      <Nav active="contact" mobile={mobile} onNav={onNav} menuOpen={menuOpen} onToggleMenu={onToggleMenu} />
       <main style={{ padding: mobile ? "40px 20px 0" : "80px 56px 0", maxWidth: mobile ? "none" : 1100, margin: "0 auto" }}>
         <h1 style={{ fontFamily: TOK.serif, fontSize: mobile ? 56 : 96, fontWeight: 300, letterSpacing: "-0.025em", margin: "0 0 24px", lineHeight: 0.95, color: TOK.accent }}>
           Let's talk.
         </h1>
         <p style={{ fontFamily: TOK.serif, fontSize: mobile ? 19 : 24, fontWeight: 400, color: TOK.inkSoft, maxWidth: 640, lineHeight: 1.45, margin: "0 0 64px" }}>
-          For research collaborations, podcast invitations, lectures, media requests, or to share your own work — I read everything.
+          For research collaborations, podcast invitations, lectures, media requests, or to share your own work.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", gap: mobile ? 32 : 56, paddingTop: 32, borderTop: `1px solid ${TOK.rule}` }}>
           <div>
@@ -690,9 +719,6 @@ function Contact({ data, mobile, onNav }) {
             ) : (
               <p style={{ fontFamily: TOK.serif, fontSize: 18, color: TOK.inkSoft }}>Email coming soon.</p>
             )}
-            <p style={{ marginTop: 24, color: TOK.inkSoft, fontSize: 14, lineHeight: 1.6, maxWidth: 380 }}>
-              I aim to reply within a week. For students writing about coursework, please include your supervisor's name.
-            </p>
           </div>
 
           {elsewhere.length > 0 && (
@@ -736,9 +762,10 @@ const PAGE_MAP = {
 function AppShell({ data }) {
   const [hash, setHash]     = React.useState(() => window.location.hash.slice(1) || "home");
   const [isMobile, setMobile] = React.useState(window.innerWidth < 768);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const onHash   = () => { setHash(window.location.hash.slice(1) || "home"); window.scrollTo(0, 0); };
+    const onHash   = () => { setHash(window.location.hash.slice(1) || "home"); window.scrollTo(0, 0); setMenuOpen(false); };
     const onResize = () => setMobile(window.innerWidth < 768);
     window.addEventListener("hashchange", onHash);
     window.addEventListener("resize", onResize);
@@ -746,7 +773,8 @@ function AppShell({ data }) {
   }, []);
 
   const onNav = target => { window.location.hash = "#" + target; };
-  const props = { data, mobile: isMobile, onNav };
+  const onToggleMenu = () => setMenuOpen(o => !o);
+  const props = { data, mobile: isMobile, onNav, menuOpen, onToggleMenu };
 
   if (hash.startsWith("project/")) {
     return <ProjectDetail {...props} slug={hash.slice(8)} />;
