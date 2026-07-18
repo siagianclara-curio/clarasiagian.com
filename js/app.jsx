@@ -311,6 +311,7 @@ function Home({ data, mobile, onNav, menuOpen, onToggleMenu }) {
   const bioParagraphs = (site.bio || "").split(/\n\n+/).filter(Boolean);
   const { links = {} } = site;
   const portraitLinks = [
+    { key: "cv",    label: "Curriculum Vitae" },
     { key: "orcid",    label: "ORCID" },
     { key: "linkedin", label: "LinkedIn" },
     { key: "yupcities", label: "YUP Project" },
@@ -698,6 +699,7 @@ function Contact({ data, mobile, onNav, menuOpen, onToggleMenu }) {
     { label: "ResearchGate",   url: links.researchgate },
     { label: "YUP Cities",     url: links.yupcities },
     { label: "Puskapa",        url: links.puskapa },
+    { label: "Curriculum Vitae", url: links.cv }
   ].filter(l => l.url);
 
   return (
