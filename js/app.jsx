@@ -428,17 +428,6 @@ function Research({ data, mobile, onNav, menuOpen, onToggleMenu }) {
                       color: TOK.inkSoft, lineHeight: 1.55, margin: "0 0 24px",
                     }}>{t.blurb}</p>
                   )}
-                  {t.tags.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 24 }}>
-                      {t.tags.map(tag => (
-                        <span key={tag} style={{
-                          fontFamily: TOK.sans, fontSize: 11, letterSpacing: "0.04em",
-                          color: TOK.accent, padding: "5px 12px", borderRadius: 999,
-                          border: `1px solid ${TOK.accentSoft}`, background: "rgba(63,103,100,0.04)",
-                        }}>{tag}</span>
-                      ))}
-                    </div>
-                  )}
                   {t.projects.length > 0 && (
                     <ul style={{ listStyle: "none", padding: 0, margin: 0, borderTop: `1px solid ${TOK.rule}` }}>
                       {t.projects.map(p => (
